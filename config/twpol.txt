@@ -1,0 +1,56 @@
+@@section GLOBAL
+TWBIN = /usr/sbin;
+TWETC = /etc/tripwire;
+TWVAR = /var/lib/tripwire;
+TDIR = /IDS;
+#
+@@section FS
+#
+SEC_CRIT      = $(IgnoreNone)-SHa ; # Critical files that cannot change
+SEC_BIN       = $(ReadOnly) ;        # Binaries that should not change
+SEC_CONFIG    = $(Dynamic) ;         # Config files that are changed
+SEC_LOG       = $(Growing) ;         # Files that grow, but that
+SEC_INVARIANT = +tpug ;              # Directories that should never
+SIG_LOW       = 33 ;                 # Non-critical files that are of
+SIG_MED       = 66 ;                 # Non-critical files that are of
+SIG_HI        = 100 ;                # Critical files that are
+#
+(
+  rulename = "Tripwire Data Files",
+  severity = $(SIG_HI)
+)
+{
+        $(TWETC)/tw.pol                 -> $(SEC_BIN) -i ;
+        $(TWETC)/tw.cfg                 -> $(SEC_BIN) -i ;
+        $(TWETC)/local.key  -> $(SEC_BIN) ;
+        $(TWETC)/site.key               -> $(SEC_BIN) ;
+}
+#
+(
+  rulename = "Root file-system executables",
+  severity = $(SIG_HI)
+)
+{
+        $(TDIR)/bin                    -> $(SEC_BIN) ;
+        $(TDIR)/sbin                   -> $(SEC_BIN) ;
+}
+#
+(
+  rulename = "Security Control",
+  severity = $(SIG_MED)
+)
+{
+        $(TDIR)/etc/passwd             -> $(SEC_CONFIG) ;
+        $(TDIR)/etc/shadow             -> $(SEC_CONFIG) ;
+}
+#
+(
+  rulename = "Other binaries",
+  severity = $(SIG_MED)
+)
+{
+        $(TDIR)/usr/local/sbin -> $(SEC_BIN) ;
+        $(TDIR)/usr/local/bin  -> $(SEC_BIN) ;
+        $(TDIR)/usr/sbin       -> $(SEC_BIN) ;
+        $(TDIR)/usr/bin        -> $(SEC_BIN) ;
+}
