@@ -1,4 +1,4 @@
-# Build
+#Build
 ```
 vim config/tw_alert.sh
 
@@ -6,7 +6,7 @@ vim config/tw_alert.sh
 
 docker build -t ids_tripwire:0.1 .
 ```
-# Docker Run
+#Docker Run
 ```
 docker run -d \
 --hostname `hostname` \
@@ -23,7 +23,7 @@ docker run -d \
 -v /etc/shadow:/IDS/etc/shadow \
 ids_tripwire:0.1
 ```
-# Update
+#Update
 ```
 docker exec -it container_name bash
 echo passphrase | twadmin -m P twpol.txt
